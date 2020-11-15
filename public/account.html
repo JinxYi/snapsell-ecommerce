@@ -1,0 +1,141 @@
+<!-- 
+Name: Tan Jing Yi
+Class: 1B03
+Admin No: 1922574
+ -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Snapsell</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!--Fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Muli&display=swap" rel="stylesheet">
+
+    <!--Font Awesome-->
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+
+    <!-- Display listing of user -->
+    <script>
+        const baseUrl = "http://localhost:6936";
+        // check if logged in
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const userInfo = localStorage.getItem('userInfo');
+
+            if (token === null || userInfo === null) {
+                window.alert("You are not logged in!");
+                window.location.assign(baseUrl + "/login.html");
+            }
+        }
+
+        function displayListings(data) {
+            // display text if listing is empty
+            if (data.length == 0) {
+                const addListingHtml = `
+                    <div class="container p-3" style="text-align:center">
+                        <h6 class="text-muted">You have not sold any products yet<h6>
+                    </div>
+                    `
+                $("#listing").append(addListingHtml);
+            }
+            // if user has listing
+            else {
+
+                data.forEach((listings) => { // listing html
+                    const listingHtml = `
+                        <div id=${listings.id} class="item col-3 p-3 mt-4 d-flex" style="cursor: pointer;">
+                            <div class="card">
+                                <div style="width:83%;margin-left:auto;margin-right:auto;margin-top:20px;height:195px;overflow:hidden;position:relative">
+                                    <img src=${listings.item_pic_url} class="card-img-top align-item-center" style="max-width:100%;width:auto;overflow: auto;margin: auto;position: absolute;top: 0; left: 0; bottom: 0; right: 0;" alt="Item" >
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">${listings.title}</h5>
+                                    <h6 class="card-subtitle">$${listings.price}</h6>
+                                    <p class="card-text" style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis">${listings.description}</p>
+                                </div>
+                                <div class="card-footer text-muted">
+                                    ${listings.created_at}
+                                </div>
+                            </div>
+                        </div>
+                        `
+
+                    $("#listing").append(listingHtml);
+                });
+            }
+        }
+
+        $(document).ready(function () {
+            checkAuth();
+            const token = localStorage.getItem('token');
+            const userInfo = localStorage.getItem('userInfo');
+
+            const userInfoJSON = JSON.parse(userInfo);
+            const userid = userInfoJSON[0].id.toString();
+
+            $.ajax({
+                url: `${baseUrl}/users/${userid}/listings`,
+                type: 'GET',
+                success: function (data, textStatus, xhr) {
+                    localStorage.setItem('mylist', JSON.stringify(data));
+                    displayListings(data);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    $("#listing").append(`<h4>Please refresh your page</h4>`);
+                }
+            })
+            $("#logout").click(function () {
+                localStorage.clear();
+                window.location.assign("/login.html");
+            })
+            // go to details page
+            $(document).on("click", ".item", function () {
+                localStorage.setItem('item', this.id);
+                window.location.assign("/details.html");
+            });
+        })
+    </script>
+</head>
+
+<body>
+    <div class="container-fluid p-0">
+        <nav class="navbar navbar-expand-lg navbar-light p-3 bg-danger">
+            <a href="/listings.html">
+                <div class="navbar-brand mb-0 h1 text-light" style="font-family: 'Muli', sans-serif;">
+                    snapsell
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <button class="btn btn-light ml-auto" id="logout">Logout</button>
+        </nav>
+    </div>
+    <div class="container">
+        <div style="margin-top: 2rem; padding:2rem;">
+            <div class="row">
+                <h2 class="col-11" style="font-family: 'Muli', sans-serif;">My list</h2>
+                <a class="col-1" href="/create.html" style="text-decoration: none;">
+                    <span style="color: rgb(220, 30, 77);font-size: 35px;">+</span>
+                </a>
+            </div>
+            <div id="listing" class="row"> <!--Listing will appear here--> </div>
+        </div>
+        
+    </div>
+
+
+</body>
+
+</html>
