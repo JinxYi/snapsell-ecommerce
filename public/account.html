@@ -1,141 +1,274 @@
-<!-- 
-Name: Tan Jing Yi
-Class: 1B03
-Admin No: 1922574
- -->
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Snapsell</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile  • Snapsell</title>
 
-    <!--Bootstrap-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-    <!--Fonts-->
-    <link href="https://fonts.googleapis.com/css?family=Muli&display=swap" rel="stylesheet">
+    <!--Frameworks and libraries-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+        integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"
+        integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
+        crossorigin="anonymous"></script>
 
     <!--Font Awesome-->
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
 
-    <!-- Display listing of user -->
-    <script>
-        const baseUrl = "http://localhost:6936";
-        // check if logged in
-        function checkAuth() {
-            const token = localStorage.getItem('token');
-            const userInfo = localStorage.getItem('userInfo');
+    <!-- Styles -->
+    <link rel="stylesheet" href="./theme.css">
+    <link rel="stylesheet" href="./home.css">
+    <link rel="stylesheet" href="./account.css">
+</head>
+<body>
+    <section class="nav">
+        <section class="wrapper">
+            <header>
+                <a class="hide-bar logo" href="home.html">Snapsell</a>
 
-            if (token === null || userInfo === null) {
-                window.alert("You are not logged in!");
-                window.location.assign(baseUrl + "/login.html");
-            }
-        }
+                <nav>
+                    <ul class="nav-list">
+                        <li class="bar"><a href="#"><i class="fas fa-bars"></i></a></li>
+                        <li class="nav-item">
+                            <form>
+                                <div class="search-bar">
+                                    <input type="text" class="input-bar" placeholder="Search products here" id="keyword">
+                                    <button type="submit" class="search-icon" id="search"><i class="fas fa-search"></i></button>
+                                </div>
+                            </form>
+                        </li>
+                        <li class="nav-item"><a href="#">Sell</a></li>
+                        <li class="nav-item"><a class="active" href="signin.html" id="account">Sign in</a></li>
+                    </ul>
+                </nav>
+            </header>
+        </section>
+    </section>
+
+    <section class="body">
+        <section class="account-wrapper">
+            <div class="profile" id="profile">
+                <div class="img-wrapper">
+                    <img src="./images/placeholder.png" alt="profile" class="image" id="image">
+                </div>
+                <div class="detail-wrapper">
+                    <div class="name">Username: <span class="name" id="name"></span></div>
+                
+                    <p class="created-at">Joined on: <span id="created_at"></span></p>
+
+                    <button id="logout">Logout</button>
+                </div>
+                
+            </div>
+        </section>
+    
+        <section class="profile-wrapper">
+            <div class="top-bar">
+                <span class="top-bar-link active" id="likes-btn">Likes</span>
+                <span class="top-bar-link" id="offer-btn">My Offers</span>
+            </div>
+            <div class="likes" id="likes">
+
+            </div>
+            <div class="offers" id="offers">
+                
+            </div>
+        </section>
+    </section>
+    
+    <script>
 
         function displayListings(data) {
-            // display text if listing is empty
-            if (data.length == 0) {
-                const addListingHtml = `
-                    <div class="container p-3" style="text-align:center">
-                        <h6 class="text-muted">You have not sold any products yet<h6>
-                    </div>
-                    `
-                $("#listing").append(addListingHtml);
-            }
-            // if user has listing
-            else {
-
-                data.forEach((listings) => { // listing html
-                    const listingHtml = `
-                        <div id=${listings.id} class="item col-3 p-3 mt-4 d-flex" style="cursor: pointer;">
-                            <div class="card">
-                                <div style="width:83%;margin-left:auto;margin-right:auto;margin-top:20px;height:195px;overflow:hidden;position:relative">
-                                    <img src=${listings.item_pic_url} class="card-img-top align-item-center" style="max-width:100%;width:auto;overflow: auto;margin: auto;position: absolute;top: 0; left: 0; bottom: 0; right: 0;" alt="Item" >
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">${listings.title}</h5>
-                                    <h6 class="card-subtitle">$${listings.price}</h6>
-                                    <p class="card-text" style="white-space: nowrap;overflow: hidden;text-overflow:ellipsis">${listings.description}</p>
-                                </div>
-                                <div class="card-footer text-muted">
-                                    ${listings.created_at}
-                                </div>
+            //clear listing
+            $("#offers").html("");
+            $("#likes").html("");
+            //add html to display products
+            data.forEach((listings) => {
+                const postHtml = `
+                    <div id=${listings.id} class="product-card">
+                        <a href="product.html?id=${listings.id}" style="color: #333;">
+                        <div class="product-img-container">
+                            <img src=${listings.item_pic_url} class="card-img">
+                        </div>
+                        
+                        <div class="card-body">
+                            <h5 class="card-title">${listings.title}</h5>
+                            <h6 class="card-subtitle">$${listings.price}</h6>
+                            <div class="like-container">
+                                <i class="fas fa-heart liked-icon"></i>
                             </div>
                         </div>
-                        `
+                        </a>
+                    </div>
+                `;
 
-                    $("#listing").append(listingHtml);
-                });
-            }
+                $("#likes").append(postHtml);
+            });
         }
 
-        $(document).ready(function () {
-            checkAuth();
-            const token = localStorage.getItem('token');
-            const userInfo = localStorage.getItem('userInfo');
+        displayOffers = (data) => {
+            $("#offers").html("");
+            $("#likes").html("");
+            data.forEach((offer) => {
+                const postHtml = `
+                <div id=${offer.id} class="product-card">
+                    <a href="product.html?id=${offer.id}" style="color: #333;">
+                        <div class="product-img-container">
+                            <img src=${offer.item_pic_url} class="card-img">
+                        </div>
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">${offer.product}</h5>
+                        <h6 class="card-subtitle">Offer: $${offer.offer}</h6>
+                        <p class="card-subtitle">Offered at: ${offer.created_at}</p>
+                    </div>
+                </div>
+                `;
 
-            const userInfoJSON = JSON.parse(userInfo);
-            const userid = userInfoJSON[0].id.toString();
-
-            $.ajax({
-                url: `${baseUrl}/users/${userid}/listings`,
-                type: 'GET',
-                success: function (data, textStatus, xhr) {
-                    localStorage.setItem('mylist', JSON.stringify(data));
-                    displayListings(data);
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    $("#listing").append(`<h4>Please refresh your page</h4>`);
-                }
+                $("#offers").append(postHtml);
             })
+        }
+
+        // display error with custom error msg
+        displayError = (id, message) => {
+            const errHTML = `
+                <div class="error-wrapper">
+                    ${message}
+                </div>
+            `
+
+            $("#offers").html("");
+            $("#likes").html("");
+            $("#"+id).html(errHTML);
+        }
+
+        displayProfile = (data) => {
+            const { id, username, profile_pic_url, created_at } = data[0];
+
+            console.log(id, username);
+            $("#image").attr("src", profile_pic_url);
+            $("#name").html(username);
+            $("#created_at").html(created_at);
+        }
+
+        $(function () {
+            const token = localStorage.getItem('token');
+            const userId = localStorage.getItem('userId');
+
+            if (!token || !userId) {
+                $("#account").attr("href", "signin.html");
+                $("#account").html("Sign in");
+            }
+            else {
+                $("#account").attr("href", "account.html");
+                $("#account").html(`<i class="fas fa-user"></i>`);
+
+                $.ajax({
+                    url: `/users/${userId}`,
+                    method: 'GET'
+                })
+                .done((data, textStatus, xhr) => {
+                    displayProfile(data);
+                })
+                .fail((xhr, textStatus, errorThrown) => {
+                    displayError("profile", "An error occured while getting user");
+                })
+
+
+                // l.id, p.id, p.title, p.price, p.item_pic_url, u.id
+                $.ajax({
+                    url: `/users/${userId}/likes`,
+                    method: 'GET',
+                    headers: {
+                        "authorization": "Bearer " + token
+                    }
+                })
+                .done((data, textStatus, xhr) => {
+                    if(data.length == 0) {
+                        displayError("likes", "You have not liked any product");
+                    }
+                    else {
+                        displayListings(data);
+                    }
+                    
+                })
+                .fail((xhr, textStatus, errorThrown) => {  
+                    if(!xhr.responseJSON.auth) {
+                        window.location.href = "signin.html";
+                    }
+                    else {
+                        displayError("likes", "An error occured while getting likes");
+                    }
+                    
+                })
+            }
+            
+            $("#offer-btn").click(() => {
+                $("#likes-btn").removeClass("active");
+                $("#offer-btn").addClass("active");
+
+                $.ajax({
+                    url: `/users/${userId}/offers`,
+                    method: 'GET',
+                    headers: {
+                        "authorization": "Bearer " + token
+                    }
+                })
+                .done((data, textStatus, xhr) => {
+                    if(data.length == 0) {
+                        displayError("likes", "You have not given offers for any product");
+                    }
+                    else {
+                        displayOffers(data);
+                    }
+                })
+                .fail((xhr, textStatus, errorThrown) => {  
+                    if(!xhr.responseJSON.auth) {
+                        window.location.href = "signin.html";
+                    }
+                    else {
+                        displayError("likes", "An error occured while getting your offers");
+                    }
+                })
+            })
+
+            $("#likes-btn").click(() => {
+                $("#offer-btn").removeClass("active");
+                $("#likes-btn").addClass("active");
+
+                $.ajax({
+                    url: `/users/${userId}/likes`,
+                    method: 'GET',
+                    headers: {
+                        "authorization": "Bearer " + token
+                    }
+                })
+                .done((data, textStatus, xhr) => {
+                    if(data.length == 0) {
+                        displayError("likes", "You have not liked any product");
+                    }
+                    else {
+                        displayListings(data);
+                    }
+                })
+                .fail((xhr, textStatus, errorThrown) => {  
+                    if(!xhr.responseJSON.auth) {
+                        window.location.href = "signin.html";
+                    }
+                    else {
+                        displayError("likes", "An error occured while getting this product");
+                    }
+                })
+            })
+
             $("#logout").click(function () {
                 localStorage.clear();
-                window.location.assign("/login.html");
+                window.location.assign("/signin.html");
             })
-            // go to details page
-            $(document).on("click", ".item", function () {
-                localStorage.setItem('item', this.id);
-                window.location.assign("/details.html");
-            });
+
         })
     </script>
-</head>
-
-<body>
-    <div class="container-fluid p-0">
-        <nav class="navbar navbar-expand-lg navbar-light p-3 bg-danger">
-            <a href="/listings.html">
-                <div class="navbar-brand mb-0 h1 text-light" style="font-family: 'Muli', sans-serif;">
-                    snapsell
-                </div>
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <button class="btn btn-light ml-auto" id="logout">Logout</button>
-        </nav>
-    </div>
-    <div class="container">
-        <div style="margin-top: 2rem; padding:2rem;">
-            <div class="row">
-                <h2 class="col-11" style="font-family: 'Muli', sans-serif;">My list</h2>
-                <a class="col-1" href="/create.html" style="text-decoration: none;">
-                    <span style="color: rgb(220, 30, 77);font-size: 35px;">+</span>
-                </a>
-            </div>
-            <div id="listing" class="row"> <!--Listing will appear here--> </div>
-        </div>
-        
-    </div>
-
-
 </body>
-
 </html>

@@ -1,0 +1,100 @@
+CREATE TABLE users (
+    id serial,
+    username varchar(255) not null UNIQUE, 
+    profile_pic_url varchar(255), 
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    password varchar(255) not null,
+
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE listing (
+    id serial not null,
+    title varchar(255) not null,
+    description varchar(255),
+    price varchar(100) not null,
+    fk_user_id int not null,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    item_pic_url varchar(255),
+    title_metaphone varchar(255),
+
+    PRIMARY KEY(id),
+    FOREIGN KEY(fk_user_id) 
+        REFERENCES users(id)
+);
+
+CREATE TABLE likes (
+    id serial not null,
+    fk_product_id int not null,
+    fk_liker_id int not null,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY(id),
+    FOREIGN KEY(fk_product_id) 
+        REFERENCES listing(id),
+    FOREIGN KEY(fk_liker_id) 
+        REFERENCES users(id)
+);
+
+CREATE TABLE offer (
+    id serial not null,
+    offer varchar(100) not null, 
+    fk_offeror_id int not null, 
+    fk_listing_id int not null,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY(id),
+    FOREIGN KEY(fk_listing_id) 
+        REFERENCES listing(id),
+    FOREIGN KEY(fk_offeror_id) 
+        REFERENCES users(id)
+);
+
+
+INSERT INTO users VALUES 
+    (1,'steve_jobs','https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Steve_Jobs_Headshot_2010-CROP2.jpg/800px-Steve_Jobs_Headshot_2010-CROP2.jpg','2019-12-26 09:27:05','easypasswor'),
+    (2,'kermitfrog','https://cdn.pixabay.com/photo/2019/12/02/05/19/kermit-the-frog-4666940_1280.jpg','2019-12-26 09:27:05','easypasswor'),
+    (3,'chickenlover45','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2019-12-26 09:27:05','easypasswor'),
+    (4,'swami','https://images.pexels.com/photos/1450082/pexels-photo-1450082.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940','2019-12-26 11:26:19','easypasswor'),
+    (5,'hawhaw','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2019-12-26 15:06:57','easypasswor'),
+    (6,'emo','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2019-12-26 15:10:31','easypasswor'),
+    (10,'bobross','https://dynaimage.cdn.cnn.com/cnn/q_auto,w_1263,c_fill,g_auto,h_711,ar_16:9/http%3A%2F%2Fcdn.cnn.com%2Fcnnnext%2Fdam%2Fassets%2F160523192458-10-netflix-amazon-hulu-itunes-june.jpg','2019-12-27 10:14:46','easypasswor'),
+    (11,'deadpool39','https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Cosplayer_of_Deadpool_calling_with_smartphone_20180729a.jpg/562px-Cosplayer_of_Deadpool_calling_with_smartphone_20180729a.jpg','2019-12-27 12:36:13','easypasswor'),
+    (14,'whatshappening','https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/womanyellingcat-1573233850.jpg?resize=980:*','2019-12-27 14:09:19','easypasswor'),
+    (15,'kayla.evans','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2019-12-27 14:13:36','easypasswor'),
+    (16,'gwen_hallaway','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2019-12-27 15:10:54','easypasswor'),
+    (17,'anonymous','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2019-12-27 15:17:28','easypasswor'),
+    (18,'otakufam<3','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2019-12-27 15:23:34','easypasswor'),
+    (19,'why_lliddat','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2019-12-27 15:28:46','easypasswor'),
+    (20,'adminUser','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2019-12-27 15:33:54','easypasswor'),
+    (21,'adminPenny','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2019-12-27 15:38:29','easypasswor'),
+    (22,'pennywise >u<','https://images-na.ssl-images-amazon.com/images/I/61qcTb%2BaYnL._AC_UL160_.jpg','2019-12-27 15:40:44','easypasswor'),
+    (23,'billie_cob2002','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2019-12-29 08:18:20','easypasswor'),
+    (24,'admin_jenny','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2019-12-29 08:56:28','easypasswor'),
+    (25,'tom','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2020-01-02 15:37:19','easypasswor'),
+    (27,'david','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2020-01-08 00:30:00','easypasswor'),
+    (28,'vaultboi','https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/PICA.jpg/900px-PICA.jpg','2020-01-17 07:36:18','easypasswor'),
+    (30,'testUser','https://freesvg.org/img/1317604469.png','2020-02-07 01:12:25','easypasswor');
+
+
+INSERT INTO listing VALUES 
+    (1,'iPhone 6s USED','In good condition. Camera and screen not working.','250',1,'2019-12-29 05:04:45','https://cdn.pixabay.com/photo/2018/10/31/14/57/apple-iphone-6-s-plus-a1687-3785988_1280.jpg','IFNSST'),
+    (2,'iPhone 8 NEW','New, never been used','699',1,'2019-12-29 05:56:01','https://images.pexels.com/photos/818043/pexels-photo-818043.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940','IFNN'),
+    (3,'Airpods','Used twice, clean','180',15,'2019-12-29 06:30:50','https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/AirPods_%282%29.jpg/1200px-AirPods_%282%29.jpg','ARPTS'),
+    (4,'Guitar String E A D G B E','Acoustic Bronze Guitar Strings','60',4,'2019-12-29 07:35:02','https://sc02.alicdn.com/kf/HTB1PpGnX21H3KVjSZFB762SMXXaE/Brass-winding-stainless-guitar-strings.png','KTRSTRNKTKB'),
+    (6,'FILA Disruptor II White 38','New. Reason for selling: size is too small for me.\nSize: 38','120',20,'2019-12-29 09:18:26','https://live.staticflickr.com/1915/44402977824_6be3618360_z.jpg','FLTSRPTRHT'),
+    (7,'SAMSUNG Type C Cable','Original, unused.','15',11,'2019-12-30 08:03:54','https://upload.wikimedia.org/wikipedia/commons/c/c3/USB-C_cable_2017_A.jpg','SMSNKTPKKBL'),
+    (8,'Uniqlo Simosons','White T-shirt, size M.','19.90',2,'2019-12-30 08:12:05','https://d2h1pu99sxkfvn.cloudfront.net/b0/2696775/328139824_qRvC7XGjcO/P0.jpg','UNKLSMSNS'),
+    (9,'Gucci Wallet','Second Hand','420',3,'2019-12-30 08:12:05','https://live.staticflickr.com/7163/6495885873_5ec99bc0b1.jpg','KKSWLT'),
+    (10,'Charles & Kieth Sling Bag/Wallet','Used twice, white.','43',15,'2019-12-30 08:12:05','https://live.staticflickr.com/5126/5363475110_0523048333.jpg','XRLSK0SLNKBKWLT'),
+    (13,'mouse','good, wireless','3',2,'2020-01-08 00:35:40','https://live.staticflickr.com/7547/16161114498_731b717ccd_b.jpg','MS'),
+    (14,'Ukulele','Brand new ','40',6,'2020-01-30 06:40:53','https://upload.wikimedia.org/wikipedia/commons/1/11/Mahalo_U50_soprano_ukulele.jpg','UKLL'),
+    (16,'Car rental','Nissan GTR. $110/day. Available from Mon to Fri','110',28,'2020-01-31 08:59:51','https://i.pinimg.com/originals/05/bf/e4/05bfe42eb7335ebf3140753f5fd343dd.jpg','KRRNTL'),
+    (17,'Car rental','Toyota Vellfire. Available Mon to Sun, 10am to 5pm. Find us at 43 Boulevard Street','50',6,'2020-01-31 09:22:24','https://i.pinimg.com/originals/08/b2/56/08b2568e7a275ce1df3a157c378e40e1.jpg','KRRNTL'),
+    (18,'SAMSUNG NOTE 8','Good condition, selling to get NOTE 10\n','360',28,'2020-02-06 10:46:00','https://p1.pxfuel.com/preview/101/27/635/samsung-galaxy-note8-phone-electronic.jpg','SMSNKNT'),
+    (20,'Bottle Caps','Meet up at vault 13','10',28,'2020-02-06 10:53:24','https://d2skuhm0vrry40.cloudfront.net/2013/articles/1/7/6/2/7/6/7/fan-attempts-to-pre-order-fallout-4-with-bottle-caps-143455857657.jpg/EG11/resize/690x-1/quality/75/format/jpg','BTLKPS'),
+    (21,'Acoustic Guitar','Have it for 2 years, scratches on the body.\nMeetup at Bishan or Khatib MRT','70',4,'2020-02-06 15:16:28','https://live.staticflickr.com/7807/31632693617_7672cdeacb_b.jpg','AKSTKKTR'),
+    (27,'Brush','Used by BobRoss himself','200',10,'2020-02-06 15:36:31','https://c1.peakpx.com/wallpaper/171/93/232/art-brush-painting-creativity-wallpaper-preview.jpg','BRX'),
+    (28,'iPhone 11 Pro Max 64GB','New, In Stock (60)','1500.99',1,'2020-02-06 15:42:23','https://p1.pxfuel.com/preview/147/405/102/iphone-11-pro-iphone-11-mobile-mobile-phone-space-gray-tech.jpg','IFNPRMKSKB'),
+    (29,'iPhone 11','New, In Stock(56).','1029.99',1,'2020-02-06 15:53:56','https://live.staticflickr.com/65535/48956447766_4f8423e551_b.jpg','IFN');
+

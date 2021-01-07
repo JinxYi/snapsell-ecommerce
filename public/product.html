@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snapsell</title>
+
+    <!--Frameworks and libraries-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+        integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"
+        integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
+        crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!--Font Awesome-->
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="./theme.css">
+    <link rel="stylesheet" href="./home.css">
+    <link rel="stylesheet" href="./product.css">
+</head>
+
+<body>
+    <section class="nav">
+        <div class="wrapper">
+            <header>
+                <a class="hide-bar logo" href="home.html">Snapsell</a>
+
+                <nav>
+                    <ul class="nav-list">
+                        <li class="bar"><a href="home.html"><i class="fas fa-bars"></i></a></li>
+                    </ul>
+                </nav>
+            </header>
+        </div>
+    </section>
+    <div class="product-wrapper" id="product-wrapper">
+        <div class="img-wrapper">
+            <img id="image" class="product-img" src="./images/placeholder.png" alt="Product"/>
+        </div>
+        <div class="product-details">
+            <div class="seller">
+                <img class="seller-pic" id="seller_pic"/>
+                <div class="seller-name" id="seller_name">Seller Name</div>
+                <button id="makeOffer" type="button" class="btn btn-success" data-toggle="modal" data-target="#offerModal" style="margin-left: auto;">Make Offer</button>
+            </div>
+            <h5 class="product-name" id="product-name">Product Name</h5>
+            <h6 class="price" id="price">$ Price</h6>
+            <p class="product-description" id="product-description">Description</p>
+            <p class="created-at" id="created_at">Created at</p>
+            <div class="likes-container">
+                <i id="like" class="far fa-heart" onClick="toggleLike(this)"></i>
+                <span id="totalLikes">0 likes</span>
+            </div>
+        </div>
+    </div>
+    <div class="offer-wrapper">
+        <table id="offers" class="table" style="width: 80%; margin: 30px auto;">
+            <!-- Offers appear here --> 
+        </table>
+    </div>
+
+    <!-- Make offer modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="offerModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Make Offer</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">$</span>
+                            </div>
+                            <input type="text" class="form-control" id="newOffer" placeholder="eg. 80" aria-label="Offer" aria-describedby="basic-addon1" required>
+                        </div>
+                        <div id="display-success" style="display:none;">
+                            Offer Made!
+                        </div>
+                    </form>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                    <button id="sendOffer" type="button" class="btn btn-success">Make offer</button>
+                </div>
+                <!-- <div class="modal-footer">
+                    
+                    
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        displayError = (message) => {
+            const errHTML = `
+                <div class="error-wrapper">
+                    ${message}
+                </div>
+            `
+
+            $("#product-wrapper").html(errHTML);
+        }
+
+        displayOfferError = (message) => {
+            const errHTML = `
+                <div class="error-wrapper">
+                    ${message}
+                </div>
+            `
+
+            $("#offer-wrapper").html(errHTML);
+        }
+
+        displayItem = (res) => {
+            const { item_pic_url, title, price, description, created_at, likes_number, seller_pic, seller_name } = res[0];
+            const datetime = new Date(created_at);
+            const date = datetime.toISOString().replace(/T.*/,'').split('-').reverse().join('-');
+            const time = datetime.getHours() + ":" + datetime.getMinutes() + ":" + datetime.getSeconds();
+
+            $("#product-name").html(title);
+            $("#price").html("$ " + price);
+            $("#product-description").html(description);
+            $("#created_at").html("Posted at: " + date + " " + time);
+            $("#totalLikes").html(likes_number + " likes");
+            $("#image").attr("src", item_pic_url);
+            $("#seller_pic").attr("src", seller_pic);
+            $("#seller_name").html(seller_name);
+
+        }
+
+        displayOffers = (res) => {
+            console.log(res);
+            if(res.length < 1) {
+                displayOfferError(`There are no offers for this item yet`);
+            }
+            // if user has listing
+            else {
+
+                var offersHTML = `<tbody>`;
+                res.forEach((offer) => { // listing html
+                    const datetime = new Date(offer.created_at);
+                    const date = datetime.toISOString().replace(/T.*/,'').split('-').reverse().join('-');
+                    const time = datetime.getHours() + ":" + datetime.getMinutes() + ":" + datetime.getSeconds();
+
+                    offersHTML += `
+                    <tr id=${offer.id}>
+                        <td>${date} ${time}</td>
+                        <td><img class="offeror-pic" src='${offer.profile_pic_url}' /></td>
+                        <td>@${offer.offeror}</td>
+                        <td scope="row">$${offer.offer}</td>
+                    </tr>
+                    `;
+                    
+                    offersHTML += `</tbody>`
+
+                    
+                });
+                $("#offers").html(offersHTML);
+            }
+        }
+
+        $(() => {
+            // put query string into object
+            const queryString = new URLSearchParams(window.location.search);
+            const listingID = queryString.get("id");
+            $.ajax({
+                url: `/listings/${listingID}`,
+                method: 'GET'
+            })
+            .done((data, textStatus, xhr) => {
+                displayItem(data);
+                })
+            .fail((xhr, textStatus, errorThrown) => {  
+                displayError("An error occured while getting this product");
+            })
+            
+
+            $.ajax({
+                url: `/listings/${listingID}/offers`,
+                method: 'GET'
+            })
+            .done((data, textStatus, xhr) => {
+                displayOffers(data);
+            })
+            .fail((xhr, textStatus, errorThrown) => {  
+                displayOfferError("Cannot get offers");
+            });
+
+
+            const token = localStorage.getItem('token');
+            const userId = localStorage.getItem('userId');
+
+            if (!token || !userId) {
+                $("#account").attr("href", "signin.html");
+                $("#account").html("Sign in");
+            }
+            else {
+                $("#account").attr("href", "account.html");
+                $("#account").html(`<i class="fas fa-user"></i>`);
+            }
+            
+
+            $.ajax({
+                url: `/listings/${listingID}/likes`,
+                method: 'GET'
+            })
+            .done(function (data, textStatus, xhr) {
+                data.forEach((likes) => {
+                    if(likes.userid == userId)
+                        $("#like").attr("class", "fas fa-heart");
+                })
+            })  
+            .fail(function (xhr, textStatus, errorThrown) {  
+                console.log("failed to get likes from user");
+            })
+
+            
+            toggleLike = (like) => {
+                const token = localStorage.getItem("token");
+                
+                const data = `{"listing_id": "${listingID}", "userid": "${userId}"}`;
+
+                $.ajax({
+                    url: `/likes/toggle`,
+                    method: 'POST',
+                    data: data,
+                    contentType: "application/json",
+                    dataType: "json",
+                    headers: {
+                        "authorization": "Bearer " + token
+                    }
+                })
+                .done((data, textStatus, xhr) => {
+                    console.log(data);
+                    
+                    if ($(like).hasClass("fas fa-heart")) {
+                        
+                        $(like).attr("class", "far fa-heart");
+                        var likes = parseInt(document.getElementById("totalLikes").innerHTML) - 1;
+                        
+                        document.getElementById("totalLikes").innerHTML = likes + " likes";
+                        console.log(likes);
+                    }
+                    else {
+                        $(like).attr("class", "fas fa-heart");
+                        var likes = parseInt(document.getElementById("totalLikes").innerHTML) + 1;
+
+                        document.getElementById("totalLikes").innerHTML = likes + " likes";
+                    }
+                })
+                .fail((xhr, textStatus, errorThrown) => {
+                    console.log(xhr);
+                    console.log("Could not like/unlike item.");
+                })
+
+
+            }
+
+            $("#sendOffer").click(function () {
+                const offer = $("#newOffer").val();
+                const data = "{\"offer\":\""+offer+"\", \"fk_offeror_id\":\""+userId+"\"}"
+                $.ajax({
+                    url: `/listings/${listingID}/offers`,
+                    method: 'POST',
+                    data: data,
+                    contentType: "application/json",
+                    dataType: "json",
+                    headers: {
+                        "authorization": "Bearer " + token
+                    }
+                })
+                .done(function (data, textStatus, xhr) {
+                    window.location.href= "/product.html";
+                    $("#display-success").style.display = "block";
+
+                })
+                .fail(function (xhr, textStatus, errorThrown) {  
+                    if(!xhr.responseJSON.auth) {
+                        window.location.href = "signin.html";
+                    }
+                    else {
+                       alert("Failed to make offer. Please try again.");
+                    }
+                })
+            })
+
+        })
+
+    </script>
+</body>

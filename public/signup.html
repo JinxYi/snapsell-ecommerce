@@ -1,123 +1,113 @@
-<!-- 
-Name: Tan Jing Yi
-Class: 1B03
-Admin No: 1922574
- -->
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Login</title>
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snapsell • Sign Up</title>
 
-        <!--Bootstrap-->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!--Frameworks and libraries-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+        integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"
+        integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
+        crossorigin="anonymous"></script>
 
-        <!--Fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Muli&display=swap" rel="stylesheet">
+    <!--Font Awesome-->
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
 
-       <script>  
-            $(document).ready(function () { 
-                $("#Signup").click(function () {  
-                    var uname=$('#username').val();
-                    var pwd=$('#pwd').val();
-                    var profile_pic_url = $('#profile_pic_url').val();
-                    var data = "{\"username\":\""+uname+"\", \"password\":\""+pwd+"\", \"profile_pic_url\":\""+profile_pic_url+"\"}";
+    <!-- Styles -->
+    <link rel="stylesheet" href="./theme.css">
+    <link rel="stylesheet" href="./signin.css">
+</head>
+<body>
+    <section class="wrapper">
+        <form action="#" method="POST">
+            <fieldset class="fieldset">
+                <legend class="legend">Snapsell</legend>
+                <div id="error-message">
+
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="username">Username*</label>
+                    <input name="username" id="username" type="text"/>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="piu">Profile Image Url</label>
+                    <input name="piu" id="profile_pic_url" type="text" placeholder="http://abc.jpg"/>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label" for="password">Password*</label>
+                    <input name="password" id="pwd" type="password" placeholder="At least 8 characters long, contain an alphabet and number"/>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="password2">Repeat Password*</label>
+                    <input name="password2" id="pwd2" type="password" placeholder="Must match password"/>
+                </div>
+
+                <input type="submit" value="Sign up" class="submit" id="signup">
+            </fieldset>
+        </form>
+        <div class="sign-up">
+            Already have an account? <a href="signin.html" class="link">Sign in</a>
+        </div>
+    </section>
+
+
+    <script>
+        $(() => {
+            $("#signup").click(() => {  
+                const uname=$('#username').val();
+                const pwd=$('#pwd').val();
+                const pwd2=$('#pwd2').val();
+                const profile_pic_url = $('#profile_pic_url').val();
+                
+
+                if(uname == "" || pwd == "" || pwd2 == "") {
+                    $('#error-message').html(`Please fill in the required fields!`);
+                }
+                else if(pwd != pwd2) {
+                    $('#error-message').html(`Passwords do not match`);
+                }
+                else {
+                    const data = "{\"username\":\""+uname+"\", \"password\":\""+pwd+"\", \"password2\":\""+pwd2+"\", \"profile_pic_url\":\""+profile_pic_url+"\"}";
                     
                     $.ajax({                                                               
-                        url: 'http://localhost:6936/users',
+                        url: '/users',
                         type: 'POST', 
                         data: data,
                         contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (data, textStatus, xhr) {  
-                            var data2 = "{\"username\":\""+uname+"\", \"password\":\""+pwd+"\"}";
-                            $.ajax({                                                               
-                                url: 'http://localhost:6936/login',
-                                type: 'POST', 
-                                data: data2,
-                                contentType: "application/json; charset=utf-8",
-                                dataType: "json",
-                                success: function (data, textStatus, xhr) {  
-                                    if (data.token != "") {                    
-                                        localStorage.setItem('token', data.token);
-                                        localStorage.setItem('userInfo', data.UserData);
-                                        window.location.assign("/listings.html");
-                                    console.log(data.status)
-                                    } else {
-                                        console.log("Error");
-                                        alert("Failed to log in");
-                                    }                                                                 
-                                },  
-                                error: function (xhr, textStatus, errorThrown) {  
-                                    console.log('Error in Operation');  
-                                }  
-                            });                        },  
-                        error: function (xhr, textStatus, errorThrown) {  
-                            console.log('Error in Operation');  
-                        }  
-                    });  
-                    return false;
-                });  
+                        dataType: "json"
+                    })
+                    .done((data, textStatus, xhr) => {  
+                        if (data.token != "") {                    
+                            localStorage.setItem('token', data.token);
+                            localStorage.setItem('userId', data.UserData);
+                            window.location.assign("home.html");
+                            console.log(data.status);
+                        } 
+                        else if(xhr.status == 400) {
+                            $('#error-message').html(xhr.responseJSON.error);
+                        } 
+                        else {
+                            console.log("Error");
+                            $('#error-message').html(`An unknown error occured`);
+                        }                                                                 
+                    })  
+                    .fail((xhr, textStatus, errorThrown) => {
+                        console.log(xhr);
+                        const err = "Error in operation";
+                        $('#error-message').html(err);  
+                    });
+                }  
+
+                return false;
             });  
-            var uname=$('#username').val();
-            var pwd=$('#pwd').val();
-            var profile_pic_url = $('#profile_pic_url').val();
-            var data = "{\"username\":\""+uname+"\", \"password\":\""+pwd+"\", \"profile_pic_url\":\""+profile_pic_url+"\"}";
-            
-              
-        </script>  
-
-    </head>
-
-    <body>
-        <style>
-            .d-flex {
-                position: fixed;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                right: 0;
-                overflow: auto;
-                background-image: url(../images/background.jpg);
-                height: 650px;
-                position: relative;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-                background-attachment: fixed;
-            }
-        </style>
-        <div class="d-flex justify-content-center align-items-center">
-            <div class="col-8 col-md-4 bg-light pb-3">
-                <form class="container" name="Signup" action="">
-                    <h3 class="text-center p-2 pt-3" style="font-family: 'Muli', sans-serif;">Log in</h3>
-
-                    <div id="error-message" style="height:26px;"> <!-- display error message --> </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="username" placeholder="Username" required="required">
-                    </div>
-
-                    <div class="form-group">
-                        <input type="password" class="form-control" id="pwd" placeholder="Password" required="required">
-                    </div>
-
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="profile_pic_url" placeholder="Profile picture(url)" required="required">
-                    </div>
-
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-danger btn-block" id="Signup" style="font-family: 'Muli', sans-serif;">Log in</button>
-                    </div>
-                    <div class="clearfix">
-                        <a href="/login.html" class="m-3">Already have an account? Log in</a>
-                    </div>        
-
-                </form>
-            </div>
-        </div>
-    </body>
+        });  
+    </script>
+</body>
 </html>

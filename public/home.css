@@ -1,0 +1,209 @@
+/* Above the fold */
+
+/*  Nav styles  */
+
+/* nav bar */
+
+.nav {
+    background: var(--maincolor);
+}
+
+.wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.1em 2em;
+    background: var(--maincolor);
+}
+
+header {
+    overflow: hidden;
+    font-family: "Montserrat", sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+/* logo styles */
+
+.logo {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0.1em 0;
+    color: #fff;
+}
+
+.logo:hover {
+    text-decoration: none;
+}
+
+/* nav link */
+
+.nav-list {
+    display: flex;
+    align-items: baseline;
+    font-size: 15px;
+}
+
+.nav-item, .bar {
+    padding: 0 0.7em;
+}
+
+.nav-item a, .bar a {
+    text-decoration: none;
+    color: #fff;
+    -webkit-transition: color 0.2s;
+    transition: 0.3s;
+}
+
+.nav-item a:hover, .bar a:hover, .logo:hover{
+    color: var(--black);
+    border-bottom: 2px solid #fff;
+}
+
+/* search bar */
+
+.bar {
+    display: none;
+}
+
+.active {
+    border-bottom: 2px solid var(--black);
+}
+
+.search {
+    background: var(--maincolor);
+}
+
+.input-bar {
+    border-radius: 25px !important;
+    border: none !important;
+}
+
+.input-bar:focus {
+    box-shadow: 0px 0px 0px 3px var(--main2color) !important;
+}
+
+.search-icon {
+    background: none;
+    border: none;
+    color: #000;
+}
+
+.search-icon:hover {
+    color: #fff;
+}
+
+.search-warpper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.6em 2em;
+}
+
+/* Listing cards */
+
+.listing-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5em 2em;
+}
+
+#listing {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.product-card {
+    background: #fff;
+    border-radius: 10px;
+    border: 1.5px solid rgb(233, 233, 233);
+    width: 23%;
+    margin: calc(2% /2);
+    padding: 18px;
+    transition: 0.2s;
+}
+
+.product-card:hover {
+    box-shadow: 18px 18px 30px #d1d9e6,
+                -18px -18px 30px #ffffff;
+}
+.product-img-container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    height: 195px;
+    overflow: hidden;
+    position: relative;
+}
+
+.card-img {
+    max-width: 100%;
+    width: auto;
+    overflow: auto;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.card-title {
+    margin-top: 15px;
+    font-size: 1.2em;
+    line-height: 1.2em;
+}
+
+.card-subtitle, .card-text {
+    margin-top: 10px;
+}
+
+.card-text {
+    line-height: 1.5em;
+    font-weight: 400;
+    font-size: 14px;
+}
+/* Likes */
+.like-container {
+    margin: 1.2em 0;
+}
+
+.like-container i {
+    color: rgb(199, 43, 43);
+    cursor: pointer;
+}
+
+/* Responsive skills grid */
+/* Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {
+    .product-card {
+        width: calc(96% / 3);
+        margin: calc(2% / 3);
+    }
+}
+
+/* Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {
+    /* make card into 2 columns */
+    .product-card {
+        width: calc(96% / 2);
+        margin: calc(2% / 2);
+    }
+    .listing-wrapper {
+        padding: 20px
+    }
+    body {
+        width: 100%;
+        padding: 0px;
+    }
+}
+
+
+
+/* Error Styles */
+.error-wrapper {
+    margin: 1.5em auto;
+    color: rgb(132, 132, 132);
+    font-size: 1.2em;
+    font-weight: 400;
+}

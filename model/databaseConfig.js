@@ -1,28 +1,13 @@
 /*
 Name: Tan Jing Yi
-Class: 1B03
-Admin No: 1922574
 */
+  
+const pg = require('pg');
+require('dotenv').config();
 
-
-
-var mysql=require('mysql');
-
-var dbConnect={
-
-    getConnection:function(){
-        var conn=mysql.createConnection({
-            host:"localhost",
-            user:"root",
-            password:"root",
-            database:"snapsell"
-
-        }
-
-        );
-
-        return conn;
-
-    }
-}
-module.exports=dbConnect;
+const connectionString = process.env.CONNECTION_URL;
+const pool = new pg.Pool({
+    connectionString: connectionString,
+    max: 5
+});
+module.exports=pool;
