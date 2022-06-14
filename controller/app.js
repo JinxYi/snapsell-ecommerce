@@ -289,7 +289,7 @@ app.post('/listings/:id/offers', verifyToken, function (req, res) {
     console.log(fk_listing_id, offer, fk_offeror_id);
     offers.addOffer(offer, fk_offeror_id, fk_listing_id, function (err, result) {
         if (!err) {
-            res.status(201);
+            res.status(200);
             res.send(`{"offerID": "created"`);
         }
         else {

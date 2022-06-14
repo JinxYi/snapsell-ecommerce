@@ -261,6 +261,9 @@
                 .fail((xhr, textStatus, errorThrown) => {
                     console.log(xhr);
                     console.log("Could not like/unlike item.");
+                    if(xhr.responseJSON && !xhr.responseJSON.auth) {
+                        window.location.href = "signin.html";
+                    }
                 })
 
 
@@ -280,12 +283,12 @@
                     }
                 })
                 .done(function (data, textStatus, xhr) {
+                    // document.querySelector("#display-success").style.display = "block";
                     window.location.href= "/product.html";
-                    $("#display-success").style.display = "block";
 
                 })
                 .fail(function (xhr, textStatus, errorThrown) {  
-                    if(!xhr.responseJSON.auth) {
+                    if(xhr.responseJSON && !xhr.responseJSON.auth) {
                         window.location.href = "signin.html";
                     }
                     else {

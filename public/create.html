@@ -28,14 +28,16 @@ Admin No: 1922574
         <!-- Go to my list (login page if not logged in) -->
         <script>
             const baseUrl = "http://localhost:6936";
+            var userInfo = null;
+            const userid = localStorage.getItem('userId');
+            const token = localStorage.getItem('token');
             // check if logged in
             function checkAuth() {
-                const token = localStorage.getItem('token');
-                const userid = localStorage.getItem('userId');
+                
 
-                if(token === null || userInfo === null) {
-                    window.alert("You are not logged in!");
-                    // window.location.assign("/signin.html");
+                if(token === null) {
+                    // window.alert("You are not logged in!");
+                    window.location.assign("/signin.html");
                 }
 
             }
@@ -47,7 +49,7 @@ Admin No: 1922574
                     var price=$('#price').val();
                     var description=$('#description').val();
                     var item_pic_url = $("#item_pic_url").val();
-                    const userInfo = localStorage.getItem('userInfo');
+                    userInfo = localStorage.getItem('userInfo');
 
 
                     var data = "{\"title\":\""+title+"\", \"description\":\""+description+"\", \"price\":\""+price+"\", \"fk_user_id\":\""+userid+"\", \"item_pic_url\":\""+item_pic_url+"\"}";

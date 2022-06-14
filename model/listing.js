@@ -88,7 +88,7 @@ var listingDB = {
     // 8) POST /listings/
     addListing: function (title, description, price, fk_user_id, item_pic_url, callback) {
         console.log("Connected! Inserting product record.");
-        var sql = 'INSERT INTO listing(title, description, price, fk_user_id, item_pic_url) VALUES($1, $2, $3, $4, $5, $6)';
+        var sql = 'INSERT INTO listing(title, description, price, fk_user_id, item_pic_url) VALUES($1, $2, $3, $4, $5)';
 
         dbConn.query(sql, [title, description, price, fk_user_id, item_pic_url], function (err, result) {
             if (err) {

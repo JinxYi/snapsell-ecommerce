@@ -6,7 +6,6 @@ var config = process.env.KEY;
 function verifyToken(req, res, next) {
 
     var token = req.headers['authorization']; //retrieve authorization header’s content
-    console.log(token);
     if (!token || !token.includes('Bearer')) { //process the token
         res.status(403);
         return res.send({ auth: 'false', message: 'Not authorized!' });
